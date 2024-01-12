@@ -23,6 +23,20 @@ int imario, jmario, ipostaza;
 char tasta;
 string directie;
 
+//
+bool isGameOver = false;
+bool existaInamic=false;
+int ienemy, jenemy;
+int maxhearts = 5;
+int lives=3;
+string enemyDirection = "dreapta";
+void afiseazaInamic(int i, int j)
+{
+    readimagefile("enemy.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
+}
+bool isInvincible = false;
+//
+
 int scor, nrstelute;
 
 int nrLinii, nrColoane, i, j;
@@ -83,20 +97,48 @@ void afiseazaMario()
 
 void afiseazaPoza(char c, int i, int j)
 {
-    if (c == '@')
+    switch (c)
+    {
+    case '@':
         readimagefile("iarba.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
-    if (c == '#')
+        break;
+    case '#':
         readimagefile("scara.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
-    if (c == '*')
+        break;
+    case '*':
         readimagefile("stea.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
-    if (c == '.')
+        break;
+    case '.':
         readimagefile("cer.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
-    if (c == ',')
+        break;
+    case ',':
         readimagefile("deal1.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
-    if (c == '!')
+        break;
+    case '!':
         readimagefile("deal2.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
-    if (c == '?')
+        break;
+    case '?':
         readimagefile("norisor.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
+        break;
+    case 'E':  // Display the enemy
+        afiseazaInamic(i, j);
+        break;
+    case 'H': //display heart
+        {
+        readimagefile("cer.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
+        readimagefile("heart.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
+        break;
+        }
+    case 'I': //display powerup
+        {
+        readimagefile("cer.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
+        readimagefile("invincibility.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
+        break;
+        }
+    default:
+        // cazul in care caracterul nu este recunoscut
+        break;
+    }
 }
 
 void showMenu(int &incepeX1, int &incepeY1, int &incepeX2, int &incepeY2,
@@ -193,10 +235,23 @@ void urmatoareaIpostaza()
         if (jmario < nrColoane - 1 && (harta[imario + 1][jmario + 1] == '@' || harta[imario + 1][jmario + 1] == '#'))
         {
             jmario++;
-            if (harta[imario][jmario] == '*')
-            {
-                scor++; harta[imario][jmario] = '.'; afiseazaScor();
-            }
+            if (harta[imario][jmario] == '*') {
+        scor++;
+        harta[imario][jmario] = '.';
+        afiseazaScor();
+
+    }
+    else if (harta[imario][jmario] == 'H') {
+        if(lives<maxhearts)
+            lives++;
+        harta[imario][jmario] = '.';
+        afiseazaScor();
+    }
+    else if (harta[imario][jmario] == 'I'){
+        // Activate invincibility
+        isInvincible = true;
+        harta[imario][jmario] = '.';  // Remove the power-up from the map
+    }
         }
     }
     else
@@ -208,10 +263,23 @@ void urmatoareaIpostaza()
             if (jmario > 0 && (harta[imario + 1][jmario - 1] == '@' || harta[imario + 1][jmario - 1] == '#'))
             {
                 jmario--;
-                if (harta[imario][jmario] == '*')
-                {
-                    scor++; harta[imario][jmario] = '.'; afiseazaScor();
-                }
+                if (harta[imario][jmario] == '*') {
+        scor++;
+        harta[imario][jmario] = '.';
+        afiseazaScor();
+
+    }
+    else if (harta[imario][jmario] == 'H') {
+        if(lives<maxhearts)
+            lives++;
+        harta[imario][jmario] = '.';
+        afiseazaScor();
+    }
+    else if (harta[imario][jmario] == 'I'){
+        // Activate invincibility
+        isInvincible = true;
+        harta[imario][jmario] = '.';  // Remove the power-up from the map
+    }
             }
         }
     if (directie == "sus")
@@ -376,6 +444,7 @@ void incarcaHarta()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -401,6 +470,7 @@ void incarcaHarta1()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -425,6 +495,7 @@ void incarcaHarta2()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.';}
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -449,6 +520,7 @@ void incarcaHarta3()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -473,6 +545,7 @@ void incarcaHarta4()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -497,6 +570,7 @@ void incarcaHarta5()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -521,6 +595,7 @@ void incarcaHarta6()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -545,6 +620,7 @@ void incarcaHarta7()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -569,6 +645,7 @@ void incarcaHarta8()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -593,6 +670,7 @@ void incarcaHarta9()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -601,6 +679,53 @@ void incarcaHarta9()
     scor = 0;
 }
 
+void checkCollisionWithEnemy()
+{
+    // Check if Mario and the enemy are at the same position
+    if (imario == ienemy && jmario == jenemy)
+    {
+        if (!isInvincible)
+            lives--;
+         afiseazaScor();
+    }
+}
+//
+void updateInamic()
+{
+    // Clear the previous position of the enemy
+    afiseazaPoza(harta[ienemy][jenemy], ienemy, jenemy);
+
+    // Logic to update the enemy's position
+    // For simplicity, let's make the enemy move back and forth horizontally
+
+    // Check if the enemy is at an edge, if yes, change direction
+    if (jenemy == 0 || jenemy == nrColoane - 1) {
+        // Change direction
+        enemyDirection = (enemyDirection == "dreapta") ? "stanga" : "dreapta";
+    }
+    else if(harta[ienemy + 1][jenemy + 1] != '@'||harta[ienemy + 1][jenemy - 1] != '@')
+        enemyDirection = (enemyDirection == "dreapta") ? "stanga" : "dreapta";
+
+    // Update the enemy's position based on the direction
+    if (enemyDirection == "dreapta" && jenemy < nrColoane - 1)
+        // Move right
+        jenemy++;
+     else if (enemyDirection == "stanga" && jenemy > 0) {
+        // Move left
+        jenemy--;
+    }
+
+
+    // Check if the enemy is at the same position as Mario
+    checkCollisionWithEnemy();
+    if (lives <= 0)
+        isGameOver = true;
+
+    // Call afiseazaInamic to display the updated enemy position
+    afiseazaInamic(ienemy, jenemy);
+    afiseazaMario();
+}
+//
 
 void incepejoc(int i)
 {
@@ -638,9 +763,16 @@ void incepejoc(int i)
         }
         ipostaza = 1;
         afiseazaMario();
+        afiseazaScor();//afiseaza scorul de inceput
+        if(existaInamic)
+            afiseazaInamic(ienemy,jenemy);
         PlaySound("Intro.wav", NULL, SND_ASYNC);
         directie = "dreapta";
         do
+        {
+            if(existaInamic)
+                updateInamic();
+        if (kbhit())
         {
             tasta = getch(); if (tasta == 0) tasta = getch();
             if (tasta == STG && jmario > 0 && harta[imario + 1][jmario - 1] != '.') directie = "stanga";
@@ -651,7 +783,10 @@ void incepejoc(int i)
             stergeMario();
             urmatoareaIpostaza();
             afiseazaMario();
+        }
             delay(30);
+            if(isGameOver==true)
+                break;
         } while (tasta != ESC);
      }
 }
@@ -664,6 +799,15 @@ void afiseazaScor()
         PlaySound("stea.wav", NULL, SND_ASYNC);
         readimagefile("stea.jpg", 30 * i, 0, 30 * i + 30, 30);
     }
+    // Display hearts based on remaining lives
+    for (int i = 1; i <= maxhearts; i++)
+        if (i <= lives)
+        {
+            readimagefile("cer.jpg", 30 * (i - 1), 60, 30 * i, 90);
+            readimagefile("heart.gif", 30 * (i - 1), 60, 30 * i, 90);
+        }
+        else
+            readimagefile("cer.jpg", 30 * (i - 1), 60, 30 * i, 90);
     afiseazaMario();
     if (scor < nrstelute)
     {
