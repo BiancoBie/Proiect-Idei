@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1704488132 source:c:\users\bianca\desktop\mario\mario2\main.cpp
+	<iostream>
+	<fstream>
+	<winbgim.h>
+	<windows.h>
+	<string.h>
+

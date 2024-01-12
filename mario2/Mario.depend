@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1701780632 source:c:\users\bianca\desktop\mario\main.cpp
+	<winbgim.h>
+
+1704485731 source:c:\users\bianca\desktop\mario\mario2\main.cpp
+	<iostream>
+	<fstream>
+	<winbgim.h>
+	<windows.h>
+	<string.h>
+

@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1699378735 source:c:\cpp\grafica1\main.cpp
+	<fstream>
+	<winbgim.h>
+	<windows.h>
+	<string.h>
+
