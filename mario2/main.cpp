@@ -17,12 +17,16 @@ using namespace std;
 #define SPC 32
 #define TAB 9
 #define BKS 8
+#define SPACE 32
 #define BUTTON_COUNT 9
+
 
 int imario, jmario, ipostaza;
 char tasta;
 string directie;
-
+//
+bool inJump = false;
+int jumpHeight = 0;
 //
 bool isGameOver = false;
 bool existaInamic=false;
@@ -32,7 +36,10 @@ int lives=3;
 string enemyDirection = "dreapta";
 void afiseazaInamic(int i, int j)
 {
-    readimagefile("enemy.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
+    if (enemyDirection == "dreapta")
+        readimagefile("enemy1.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
+    else if (enemyDirection == "stanga")
+            readimagefile("enemy2.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
 }
 bool isInvincible = false;
 //
@@ -120,16 +127,16 @@ void afiseazaPoza(char c, int i, int j)
     case '?':
         readimagefile("norisor.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
         break;
-    case 'E':  // Display the enemy
+    case 'E':  // afiseaza inamicul
         afiseazaInamic(i, j);
         break;
-    case 'H': //display heart
+    case 'H': //afiseaza heart
         {
         readimagefile("cer.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
         readimagefile("heart.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
         break;
         }
-    case 'I': //display powerup
+    case 'I': //afiseaza powerup
         {
         readimagefile("cer.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
         readimagefile("invincibility.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
@@ -227,43 +234,65 @@ void stergeMario()
 
 void urmatoareaIpostaza()
 {
+    stergeMario();
+
     if (directie == "dreapta")
     {
         if (abs(ipostaza) == 10) ipostaza = 1;
         else if (abs(ipostaza)==2) ipostaza = 1;
         else ipostaza = -1 * ipostaza;
-        if (jmario < nrColoane - 1 && (harta[imario + 1][jmario + 1] == '@' || harta[imario + 1][jmario + 1] == '#'))
-        {
+        if (jmario < nrColoane - 1 && harta[imario][jmario + 1] != '@')
             jmario++;
-            if (harta[imario][jmario] == '*') {
-        scor++;
-        harta[imario][jmario] = '.';
-        afiseazaScor();
+    }
 
-    }
-    else if (harta[imario][jmario] == 'H') {
-        if(lives<maxhearts)
-            lives++;
-        harta[imario][jmario] = '.';
-        afiseazaScor();
-    }
-    else if (harta[imario][jmario] == 'I'){
-        // Activate invincibility
-        isInvincible = true;
-        harta[imario][jmario] = '.';  // Remove the power-up from the map
-    }
-        }
-    }
-    else
-        if (directie == "stanga")
+        else if (directie == "stanga")
         {
             if (abs(ipostaza) == 10) ipostaza = 2;
             else if (abs(ipostaza)==1) ipostaza = 2;
             else ipostaza = -1 * ipostaza;
-            if (jmario > 0 && (harta[imario + 1][jmario - 1] == '@' || harta[imario + 1][jmario - 1] == '#'))
-            {
+            if (jmario > 0 && harta[imario][jmario - 1] != '@')
                 jmario--;
-                if (harta[imario][jmario] == '*') {
+        }
+         else if (directie == "sus")
+            {
+                if (abs(ipostaza) == 10) ipostaza = -1 * ipostaza;
+                else ipostaza = 10;
+                if (harta[imario - 1][jmario] == '#') imario--;
+            }
+             else if (directie == "jos")
+                    {
+                        if (abs(ipostaza) == 10) ipostaza = -1 * ipostaza;
+                        else ipostaza = -10;
+                        if (harta[imario + 1][jmario] == '#') imario++;
+                    }
+   // să cadă dacă Mario nu sare și nu există pământ sau scări sub el
+    if (!inJump && harta[imario + 1][jmario] != '@' && harta[imario + 1][jmario] != '#') {
+        inJump = true;
+        jumpHeight = 2;
+    }
+
+
+
+    //// Sari logica ////
+    if (inJump) {
+        if (jumpHeight < 2 && harta[imario - 1][jmario] != '@') {
+            jumpHeight++;
+            imario--;
+        } else {
+            inJump = false;
+            jumpHeight = 0;
+            // Repetăm ​​logica căderii la pământ
+            while (imario < nrLinii - 1 && harta[imario + 1][jmario] != '@') {
+                imario++;
+            }
+        }
+    }
+
+
+
+
+
+    if (harta[imario][jmario] == '*') {
         scor++;
         harta[imario][jmario] = '.';
         afiseazaScor();
@@ -276,24 +305,12 @@ void urmatoareaIpostaza()
         afiseazaScor();
     }
     else if (harta[imario][jmario] == 'I'){
-        // Activate invincibility
+        // activeaza invincibilitatea
         isInvincible = true;
-        harta[imario][jmario] = '.';  // Remove the power-up from the map
+        harta[imario][jmario] = '.';  // sterge powerup-ul de pe harta
     }
-            }
-        }
-    if (directie == "sus")
-    {
-        if (abs(ipostaza) == 10) ipostaza = -1 * ipostaza;
-        else ipostaza = 10;
-        if (harta[imario - 1][jmario] == '#') imario--;
-    }
-    if (directie == "jos")
-    {
-        if (abs(ipostaza) == 10) ipostaza = -1 * ipostaza;
-        else ipostaza = -10;
-        if (harta[imario + 1][jmario] == '#') imario++;
-    }
+    afiseazaMario();
+
 }
 
 struct Button {
@@ -681,7 +698,7 @@ void incarcaHarta9()
 
 void checkCollisionWithEnemy()
 {
-    // Check if Mario and the enemy are at the same position
+    // verifica daca Mario si inamicul sunt pe aceeasi pozitie
     if (imario == ienemy && jmario == jenemy)
     {
         if (!isInvincible)
@@ -692,38 +709,44 @@ void checkCollisionWithEnemy()
 //
 void updateInamic()
 {
-    // Clear the previous position of the enemy
+    // sterge ultima pozitie
     afiseazaPoza(harta[ienemy][jenemy], ienemy, jenemy);
 
-    // Logic to update the enemy's position
-    // For simplicity, let's make the enemy move back and forth horizontally
-
-    // Check if the enemy is at an edge, if yes, change direction
-    if (jenemy == 0 || jenemy == nrColoane - 1) {
-        // Change direction
+    // verifica daca se afla la margine sau langa un bloc
+    if (jenemy == 0 || jenemy == nrColoane - 1||harta[ienemy][jenemy + 1] == '@'||harta[ienemy][jenemy - 1] == '@')
+        // schimba directia
         enemyDirection = (enemyDirection == "dreapta") ? "stanga" : "dreapta";
-    }
-    else if(harta[ienemy + 1][jenemy + 1] != '@'||harta[ienemy + 1][jenemy - 1] != '@')
-        enemyDirection = (enemyDirection == "dreapta") ? "stanga" : "dreapta";
+    else if(harta[ienemy + 1][jenemy + 1] == '.'||harta[ienemy + 1][jenemy - 1] == '.')
+            enemyDirection = (enemyDirection == "dreapta") ? "stanga" : "dreapta";
 
-    // Update the enemy's position based on the direction
+    // modifica pozitia
     if (enemyDirection == "dreapta" && jenemy < nrColoane - 1)
-        // Move right
-        jenemy++;
-     else if (enemyDirection == "stanga" && jenemy > 0) {
-        // Move left
+            jenemy++;
+     else if (enemyDirection == "stanga" && jenemy > 0)
+        // se misca la stanga
         jenemy--;
-    }
 
 
-    // Check if the enemy is at the same position as Mario
+    //verifica daca Mario si inamicul sunt la aceeasi pozitie
     checkCollisionWithEnemy();
     if (lives <= 0)
         isGameOver = true;
 
-    // Call afiseazaInamic to display the updated enemy position
+    // afiseazaInamic - pozitia urmatoarea a inamicului
     afiseazaInamic(ienemy, jenemy);
     afiseazaMario();
+}
+//
+//
+bool canJump() {
+    return harta[imario + 1][jmario] == '@' && harta[imario - 1][jmario] != '@';
+}
+
+void jump() {
+    if (canJump() && !inJump) {
+        inJump = true;
+        jumpHeight = 0;
+    }
 }
 //
 
@@ -775,18 +798,19 @@ void incepejoc(int i)
         if (kbhit())
         {
             tasta = getch(); if (tasta == 0) tasta = getch();
-            if (tasta == STG && jmario > 0 && harta[imario + 1][jmario - 1] != '.') directie = "stanga";
-            if (tasta == DRP && jmario < nrColoane - 1 && harta[imario + 1][jmario + 1] != '.')
-                directie = "dreapta";
+            if (tasta == STG && jmario > 0) directie = "stanga";
+            if (tasta == DRP && jmario < nrColoane - 1) directie = "dreapta";
             if (tasta == SUS && harta[imario - 1][jmario] == '#') directie = "sus";
             if (tasta == JOS && harta[imario + 1][jmario] == '#') directie = "jos";
-            stergeMario();
+            if (tasta == SPACE && !inJump) jump();
             urmatoareaIpostaza();
-            afiseazaMario();
-        }
+            directie = "none";//directia trebuie initializata cu none altfe cand sari, sare intr=o parte
+        } else if (inJump)
+            urmatoareaIpostaza();
+
             delay(30);
             if(isGameOver==true)
-                break;
+                break;//    de adaugat meniu atunci cand pierzi
         } while (tasta != ESC);
      }
 }
@@ -799,7 +823,7 @@ void afiseazaScor()
         PlaySound("stea.wav", NULL, SND_ASYNC);
         readimagefile("stea.jpg", 30 * i, 0, 30 * i + 30, 30);
     }
-    // Display hearts based on remaining lives
+    // afiseaza inimile pe ecran in functie de cate mai ai
     for (int i = 1; i <= maxhearts; i++)
         if (i <= lives)
         {
