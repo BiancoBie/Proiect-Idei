@@ -20,12 +20,21 @@ using namespace std;
 #define SPACE 32
 #define BUTTON_COUNT 9
 
+#define W_KEY 119
+#define A_KEY 97
+#define S_KEY 115
+#define D_KEY 100
+#define SHIFT 113
 
 int imario, jmario, ipostaza;
+int iluigi, jluigi, ipostazaluigi;
 char tasta;
-string directie;
+string directie,directie2;
+bool multiplayer=false;
 //
 bool inJump = false;
+bool inJumpLuigi = false;
+
 int jumpHeight = 0;
 //
 bool isGameOver = false;
@@ -42,7 +51,6 @@ void afiseazaInamic(int i, int j)
             readimagefile("enemy2.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
 }
 bool isInvincible = false;
-//
 
 int scor, nrstelute;
 
@@ -60,6 +68,12 @@ void SetVolume(DWORD volume) {
     if (waveOutSetVolume(NULL, volume) != MMSYSERR_NOERROR) {
     }
 }
+
+void afiseazaLuigi();
+void stergeLuigi();
+void urmatoareaIpostazaLuigi();
+
+
 
 void incepejoc(int i);
 void afiseazaScor();
@@ -89,6 +103,22 @@ void afiseazaMario()
     int y = imario * latime, x = jmario * latime;
 
     switch (ipostaza) {
+    case -10: readimagefile("mario_spate_1.gif", x, y, x + latime, y + latime); break;
+    case 10: readimagefile("mario_spate_2.gif", x, y, x + latime, y + latime); break;
+    case 1:
+        readimagefile("mario1.gif", x, y, x + latime, y + latime); break;
+    case 2:
+        readimagefile("mario4.gif", x, y, x + latime, y + latime); break;
+    case -1:
+        readimagefile("mario2.gif", x, y, x + latime, y + latime); break;
+    case -2:
+        readimagefile("mario5.gif", x, y, x + latime, y + latime); break;
+    }
+}
+void afiseazaLuigi() {
+    int y = iluigi * latime, x = jluigi * latime;
+
+    switch (ipostazaluigi) {
     case -10: readimagefile("mario_spate_1.gif", x, y, x + latime, y + latime); break;
     case 10: readimagefile("mario_spate_2.gif", x, y, x + latime, y + latime); break;
     case 1:
@@ -231,6 +261,10 @@ void stergeMario()
 {
     afiseazaPoza(harta[imario][jmario], imario, jmario);
 }
+void stergeLuigi()
+{
+    afiseazaPoza(harta[iluigi][jluigi], iluigi, jluigi);
+}
 
 void urmatoareaIpostaza()
 {
@@ -288,10 +322,6 @@ void urmatoareaIpostaza()
         }
     }
 
-
-
-
-
     if (harta[imario][jmario] == '*') {
         scor++;
         harta[imario][jmario] = '.';
@@ -312,6 +342,102 @@ void urmatoareaIpostaza()
     afiseazaMario();
 
 }
+void checkCollisionWithLuigi()
+{
+    // verifica daca Mario si inamicul sunt pe aceeasi pozitie
+    if (iluigi == ienemy && jluigi == jenemy)
+    {
+        if (!isInvincible)
+            lives--;
+         afiseazaScor();
+    }
+}
+void urmatoareaIpostazaLuigi()
+{
+    stergeLuigi();
+
+    if (directie2 == "dreapta")
+    {
+        if (abs(ipostazaluigi) == 10) ipostazaluigi = 1;
+        else if (abs(ipostazaluigi) == 2) ipostazaluigi = 1;
+        else ipostazaluigi = -1 * ipostazaluigi;
+        if (jluigi < nrColoane - 1 && harta[iluigi][jluigi + 1] != '@')
+            jluigi++;
+    }
+    else if (directie2 == "stanga")
+    {
+        if (abs(ipostazaluigi) == 10) ipostazaluigi = 2;
+        else if (abs(ipostazaluigi) == 1) ipostazaluigi = 2;
+        else ipostazaluigi = -1 * ipostazaluigi;
+        if (jluigi > 0 && harta[iluigi][jluigi - 1] != '@')
+            jluigi--;
+    }
+    else if (directie2 == "sus")
+    {
+        if (abs(ipostazaluigi) == 10) ipostazaluigi = -1 * ipostazaluigi;
+        else ipostazaluigi = 10;
+        if (iluigi > 0 && harta[iluigi - 1][jluigi] == '#')
+            iluigi--;
+    }
+    else if (directie2 == "jos")
+    {
+        if (abs(ipostazaluigi) == 10) ipostazaluigi = -1 * ipostazaluigi;
+        else ipostazaluigi = -10;
+        if (iluigi < nrLinii - 1 && harta[iluigi + 1][jluigi] == '#')
+            iluigi++;
+    }
+
+    // să cadă dacă Luigi nu sare și nu există pământ sau scări sub el
+    if (!inJumpLuigi && harta[iluigi + 1][jluigi] != '@' && harta[iluigi + 1][jluigi] != '#')
+    {
+        inJumpLuigi = true;
+        jumpHeight = 2;
+    }
+
+    //// Sari logica ////
+    if (inJumpLuigi)
+    {
+        if (jumpHeight < 2 && harta[iluigi - 1][jluigi] != '@')
+        {
+            jumpHeight++;
+            iluigi--;
+        }
+        else
+        {
+            inJumpLuigi = false;
+            jumpHeight = 0;
+            // Repetăm ​​logica căderii la pământ
+            while (iluigi < nrLinii - 1 && harta[iluigi + 1][jluigi] != '@')
+            {
+                iluigi++;
+            }
+        }
+    }
+
+    if (harta[iluigi][jluigi] == '*')
+    {
+        scor++;
+        harta[iluigi][jluigi] = '.';
+        afiseazaScor();
+    }
+    else if (harta[iluigi][jluigi] == 'H')
+    {
+        if (lives < maxhearts)
+            lives++;
+        harta[iluigi][jluigi] = '.';
+        afiseazaScor();
+    }
+    else if (harta[iluigi][jluigi] == 'I')
+    {
+        // activeaza invincibilitatea
+        isInvincible = true;
+        harta[iluigi][jluigi] = '.';  // sterge powerup-ul de pe harta
+    }
+    afiseazaLuigi();
+}
+
+
+
 
 struct Button {
     int left, top, right, bottom;
@@ -488,6 +614,7 @@ void incarcaHarta1()
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
             if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -688,6 +815,7 @@ void incarcaHarta9()
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
             if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true;}
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -706,6 +834,7 @@ void checkCollisionWithEnemy()
          afiseazaScor();
     }
 }
+
 //
 void updateInamic()
 {
@@ -729,22 +858,36 @@ void updateInamic()
 
     //verifica daca Mario si inamicul sunt la aceeasi pozitie
     checkCollisionWithEnemy();
+    checkCollisionWithLuigi();
+
     if (lives <= 0)
         isGameOver = true;
 
     // afiseazaInamic - pozitia urmatoarea a inamicului
     afiseazaInamic(ienemy, jenemy);
     afiseazaMario();
+    if(multiplayer)
+        afiseazaLuigi();
 }
 //
 //
 bool canJump() {
     return harta[imario + 1][jmario] == '@' && harta[imario - 1][jmario] != '@';
 }
+bool canJumpLuigi() {
+    return harta[iluigi + 1][jluigi] == '@' && harta[iluigi - 1][jluigi] != '@';
+}
+
 
 void jump() {
     if (canJump() && !inJump) {
         inJump = true;
+        jumpHeight = 0;
+    }
+}
+void jumpLuigi() {
+    if (canJumpLuigi() && !inJumpLuigi) {
+        inJumpLuigi = true;
         jumpHeight = 0;
     }
 }
@@ -786,11 +929,18 @@ void incepejoc(int i)
         }
         ipostaza = 1;
         afiseazaMario();
+        if(multiplayer)
+        {
+            afiseazaLuigi();
+            ipostazaluigi = 1;
+        }
         afiseazaScor();//afiseaza scorul de inceput
         if(existaInamic)
             afiseazaInamic(ienemy,jenemy);
         PlaySound("Intro.wav", NULL, SND_ASYNC);
-        directie = "dreapta";
+        directie = "none";
+        directie2 = "none";
+
         do
         {
             if(existaInamic)
@@ -805,10 +955,24 @@ void incepejoc(int i)
             if (tasta == SPACE && !inJump) jump();
             urmatoareaIpostaza();
             directie = "none";//directia trebuie initializata cu none altfe cand sari, sare intr=o parte
-        } else if (inJump)
-            urmatoareaIpostaza();
 
-            delay(30);
+        if(multiplayer)
+        {
+            if (tasta == A_KEY && jluigi > 0) directie2 = "stanga";
+            if (tasta == D_KEY && jluigi < nrColoane - 1) directie2 = "dreapta";
+            if (tasta == W_KEY && harta[iluigi - 1][jluigi] == '#') directie2 = "sus";
+            if (tasta == S_KEY && harta[iluigi + 1][jluigi] == '#') directie2 = "jos";
+            if (tasta == SHIFT && !inJumpLuigi) jumpLuigi();
+            urmatoareaIpostazaLuigi();
+            directie2 = "none";
+        }
+        } else {
+                if (inJump)
+                    urmatoareaIpostaza();
+                if (inJumpLuigi&&multiplayer)
+                    urmatoareaIpostazaLuigi();
+                }
+            delay(100);
             if(isGameOver==true)
                 break;//    de adaugat meniu atunci cand pierzi
         } while (tasta != ESC);
