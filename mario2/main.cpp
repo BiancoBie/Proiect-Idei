@@ -588,6 +588,7 @@ void incarcaHarta()
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
             if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -640,6 +641,7 @@ void incarcaHarta2()
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
             if (car == 'E') { ienemy = i; jenemy = j; car = '.';}
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -665,6 +667,7 @@ void incarcaHarta3()
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
             if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -690,6 +693,7 @@ void incarcaHarta4()
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
             if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -715,6 +719,7 @@ void incarcaHarta5()
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
             if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -740,6 +745,7 @@ void incarcaHarta6()
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
             if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -765,6 +771,7 @@ void incarcaHarta7()
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
             if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -790,6 +797,7 @@ void incarcaHarta8()
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
             if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
@@ -815,7 +823,7 @@ void incarcaHarta9()
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
             if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true; }
-            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true;}
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
         }
