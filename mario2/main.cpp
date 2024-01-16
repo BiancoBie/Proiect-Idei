@@ -43,13 +43,7 @@ int ienemy, jenemy;
 int maxhearts = 5;
 int lives=3;
 string enemyDirection = "dreapta";
-void afiseazaInamic(int i, int j)
-{
-    if (enemyDirection == "dreapta")
-        readimagefile("enemy1.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
-    else if (enemyDirection == "stanga")
-            readimagefile("enemy2.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
-}
+
 bool isInvincible = false;
 
 int scor, nrstelute;
@@ -98,6 +92,14 @@ void Exit_Transition()
     }
 }
 
+void afiseazaInamic(int i, int j)
+{
+    if (enemyDirection == "dreapta")
+        readimagefile("inamicmaro2.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
+    else if (enemyDirection == "stanga")
+            readimagefile("inamicmaro1.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
+}
+
 void afiseazaMario()
 {
     int y = imario * latime, x = jmario * latime;
@@ -119,16 +121,16 @@ void afiseazaLuigi() {
     int y = iluigi * latime, x = jluigi * latime;
 
     switch (ipostazaluigi) {
-    case -10: readimagefile("mario_spate_1.gif", x, y, x + latime, y + latime); break;
-    case 10: readimagefile("mario_spate_2.gif", x, y, x + latime, y + latime); break;
+    case -10: readimagefile("luigi_spate_1.gif", x, y, x + latime, y + latime); break;
+    case 10: readimagefile("luigi_spate_2.gif", x, y, x + latime, y + latime); break;
     case 1:
-        readimagefile("mario1.gif", x, y, x + latime, y + latime); break;
+        readimagefile("luigi1.gif", x, y, x + latime, y + latime); break;
     case 2:
-        readimagefile("mario4.gif", x, y, x + latime, y + latime); break;
+        readimagefile("luigi4.gif", x, y, x + latime, y + latime); break;
     case -1:
-        readimagefile("mario2.gif", x, y, x + latime, y + latime); break;
+        readimagefile("luigi2.gif", x, y, x + latime, y + latime); break;
     case -2:
-        readimagefile("mario5.gif", x, y, x + latime, y + latime); break;
+        readimagefile("luigi5.gif", x, y, x + latime, y + latime); break;
     }
 }
 
@@ -163,14 +165,14 @@ void afiseazaPoza(char c, int i, int j)
     case 'H': //afiseaza heart
         {
         readimagefile("cer.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
-        readimagefile("heart.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
+        readimagefile("inima.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
         break;
         }
     case 'I': //afiseaza powerup
         {
         readimagefile("cer.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
-        readimagefile("invincibility.gif", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
-        break;
+        readimagefile("powerup.jpg", latime * j, latime * i, latime * (j + 1), latime * (i + 1));
+        break;PlaySound("intro.wav", NULL, SND_ASYNC);
         }
     default:
         // cazul in care caracterul nu este recunoscut
@@ -191,6 +193,11 @@ void showMenu(int &incepeX1, int &incepeY1, int &incepeX2, int &incepeY2,
 
     int buttonWidth = 700;
     int buttonHeight =50;
+
+    //outtextxy(100, 200, "Proiect realizat de: ");
+    //outtextxy(100, 250, "Plamada Bianca-Elena");
+    //outtextxy(100, 300, "Pronina Yevanheliia");
+    //outtextxy(100, 350, "Robu Mihai");
 
     incepeX1 = windowWidth / 2.5 - 23 * strlen("DEMO") / 2;
     incepeY1 = 270;
@@ -257,6 +264,39 @@ void showEndGameMenu(int incepeX1, int incepeY1, int incepeX2, int incepeY2,
     outtextxy(inchideX1 + 5, inchideY1 + 5, "Inchide");
 }
 
+void showMultiplayerGameMenu(int incepeX1, int incepeY1, int incepeX2, int incepeY2,
+                        int inchideX1, int inchideY1, int inchideX2, int inchideY2) {
+    cleardevice();
+    setbkcolor(LIGHTGREEN);
+    setcolor(BLUE);
+    settextstyle(DEFAULT_FONT, HORIZ_DIR, 3);
+
+    int windowWidth = 1820;
+    int windowHeight = 900;
+
+    int buttonWidth = 700;
+    int buttonHeight =50;
+
+    incepeX1 = windowWidth / 2.5 - 23 * strlen("1 player") / 2;
+    incepeY1 = 270;
+    incepeX2 = incepeX1 + 23 * strlen("1 player");
+    incepeY2 = incepeY1 + 30;
+
+     int border_color = WHITE;
+    floodfill(nivelX1,nivelY1,border_color);
+
+    rectangle(incepeX1, incepeY1, incepeX2, incepeY2);
+    outtextxy(incepeX1 + 7, incepeY1 + 7, "1 player");
+
+    inchideX1 = windowWidth / 2.5 - 22.5 * strlen("2 players") / 2;
+    inchideY1 = nivelY1 + 40;
+    inchideX2 = inchideX1 + 22.5 * strlen("2 players");
+    inchideY2 = inchideY1 + 30;
+
+    rectangle(inchideX1, inchideY1, inchideX2, inchideY2);
+    outtextxy(inchideX1 + 5, inchideY1 + 5, "2 players");
+}
+
 void stergeMario()
 {
     afiseazaPoza(harta[imario][jmario], imario, jmario);
@@ -309,6 +349,7 @@ void urmatoareaIpostaza()
 
     //// Sari logica ////
     if (inJump) {
+            PlaySound("saritura.wav", NULL, SND_ASYNC);
         if (jumpHeight < 2 && harta[imario - 1][jmario] != '@') {
             jumpHeight++;
             imario--;
@@ -320,6 +361,7 @@ void urmatoareaIpostaza()
                 imario++;
             }
         }
+        PlaySound("intro.wav", NULL, SND_ASYNC);
     }
 
     if (harta[imario][jmario] == '*') {
@@ -336,6 +378,7 @@ void urmatoareaIpostaza()
     }
     else if (harta[imario][jmario] == 'I'){
         // activeaza invincibilitatea
+        PlaySound("powerup.wav", NULL, SND_ASYNC);
         isInvincible = true;
         harta[imario][jmario] = '.';  // sterge powerup-ul de pe harta
     }
@@ -347,6 +390,7 @@ void checkCollisionWithLuigi()
     // verifica daca Mario si inamicul sunt pe aceeasi pozitie
     if (iluigi == ienemy && jluigi == jenemy)
     {
+        PlaySound("damage.wav", NULL, SND_ASYNC);
         if (!isInvincible)
             lives--;
          afiseazaScor();
@@ -397,6 +441,7 @@ void urmatoareaIpostazaLuigi()
     //// Sari logica ////
     if (inJumpLuigi)
     {
+        PlaySound("saritura.wav", NULL, SND_ASYNC);
         if (jumpHeight < 2 && harta[iluigi - 1][jluigi] != '@')
         {
             jumpHeight++;
@@ -412,6 +457,7 @@ void urmatoareaIpostazaLuigi()
                 iluigi++;
             }
         }
+        PlaySound("intro.wav", NULL, SND_ASYNC);
     }
 
     if (harta[iluigi][jluigi] == '*')
@@ -430,13 +476,12 @@ void urmatoareaIpostazaLuigi()
     else if (harta[iluigi][jluigi] == 'I')
     {
         // activeaza invincibilitatea
+        PlaySound("powerup.wav", NULL, SND_ASYNC);
         isInvincible = true;
         harta[iluigi][jluigi] = '.';  // sterge powerup-ul de pe harta
     }
     afiseazaLuigi();
 }
-
-
 
 
 struct Button {
@@ -497,64 +542,297 @@ void handleButtonClick(int x, int y) {
 void button1Action() {
     PlaySound("buton.wav", NULL, SND_ASYNC);
     cleardevice();
-    int i=1;
-    incepejoc(i);
+    showMultiplayerGameMenu(incepeX1, incepeY1, incepeX2, incepeY2, inchideX1, inchideY1, inchideX2, inchideY2);
+    bool running = true;
+    while (running) {
+        if (ismouseclick(WM_LBUTTONDOWN)) {
+            int x, y;
+            getmouseclick(WM_LBUTTONDOWN, x, y);
+    if (isInsideButton(x, y, incepeX1, incepeY1, incepeX2, incepeY2))
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+        incepejoc(1);
+        break;
+      }
+
+    else
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+       incepejoc(11);
+       break;
+      }
+    }
+    }
 }
 
 void button2Action() {
     PlaySound("buton.wav", NULL, SND_ASYNC);
     cleardevice();
-    int i=2;
-    incepejoc(i);
+    showMultiplayerGameMenu(incepeX1, incepeY1, incepeX2, incepeY2, inchideX1, inchideY1, inchideX2, inchideY2);
+    bool running = true;
+    while (running) {
+        if (ismouseclick(WM_LBUTTONDOWN)) {
+            int x, y;
+            getmouseclick(WM_LBUTTONDOWN, x, y);
+    if (isInsideButton(x, y, incepeX1, incepeY1, incepeX2, incepeY2))
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+        incepejoc(2);
+        break;
+      }
+
+    else
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+       bool multiplayer=true;
+       incepejoc(22);
+       break;
+      }
+    }
+    }
 }
 
 void button3Action() {
     PlaySound("buton.wav", NULL, SND_ASYNC);
     cleardevice();
-    int i=3;
-    incepejoc(i);
+    showMultiplayerGameMenu(incepeX1, incepeY1, incepeX2, incepeY2, inchideX1, inchideY1, inchideX2, inchideY2);
+    bool running = true;
+    while (running) {
+        if (ismouseclick(WM_LBUTTONDOWN)) {
+            int x, y;
+            getmouseclick(WM_LBUTTONDOWN, x, y);
+    if (isInsideButton(x, y, incepeX1, incepeY1, incepeX2, incepeY2))
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+        bool multiplayer=true;
+        incepejoc(3);
+        break;
+      }
+
+    else
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+       bool multiplayer=true;
+       incepejoc(33);
+       break;
+      }
+    }
+    }
 }
 
 void button4Action() {
     PlaySound("buton.wav", NULL, SND_ASYNC);
     cleardevice();
-    int i=4;
-    incepejoc(i);
+    showMultiplayerGameMenu(incepeX1, incepeY1, incepeX2, incepeY2, inchideX1, inchideY1, inchideX2, inchideY2);
+    bool running = true;
+    while (running) {
+        if (ismouseclick(WM_LBUTTONDOWN)) {
+            int x, y;
+            getmouseclick(WM_LBUTTONDOWN, x, y);
+    if (isInsideButton(x, y, incepeX1, incepeY1, incepeX2, incepeY2))
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+        incepejoc(4);
+        break;
+      }
+
+    else
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+       bool multiplayer=true;
+       incepejoc(44);
+       break;
+      }
+    }
+    }
 }
 
 void button5Action() {
     PlaySound("buton.wav", NULL, SND_ASYNC);
     cleardevice();
-    int i=5;
-    incepejoc(i);
+    showMultiplayerGameMenu(incepeX1, incepeY1, incepeX2, incepeY2, inchideX1, inchideY1, inchideX2, inchideY2);
+    bool running = true;
+    while (running) {
+        if (ismouseclick(WM_LBUTTONDOWN)) {
+            int x, y;
+            getmouseclick(WM_LBUTTONDOWN, x, y);
+    if (isInsideButton(x, y, incepeX1, incepeY1, incepeX2, incepeY2))
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+        incepejoc(5);
+        break;
+      }
+
+    else
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+       bool multiplayer=true;
+       incepejoc(55);
+       break;
+      }
+    }
+    }
 }
 
 void button6Action() {
     PlaySound("buton.wav", NULL, SND_ASYNC);
-    cleardevice();
-    int i=6;
-    incepejoc(i);
+    showMultiplayerGameMenu(incepeX1, incepeY1, incepeX2, incepeY2, inchideX1, inchideY1, inchideX2, inchideY2);
+    bool running = true;
+    while (running) {
+        if (ismouseclick(WM_LBUTTONDOWN)) {
+            int x, y;
+            getmouseclick(WM_LBUTTONDOWN, x, y);
+    if (isInsideButton(x, y, incepeX1, incepeY1, incepeX2, incepeY2))
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+                cleardevice();
+                DWORD volume = 0x40004000;
+                SetVolume(0x40004000);
+        incepejoc(6);
+        break;
+      }
+
+    else
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+       bool multiplayer=true;
+       incepejoc(66);
+       break;
+      }
+    }
+    }
 }
 
 void button7Action() {
     PlaySound("buton.wav", NULL, SND_ASYNC);
     cleardevice();
-    int i=7;
-    incepejoc(i);
+    showMultiplayerGameMenu(incepeX1, incepeY1, incepeX2, incepeY2, inchideX1, inchideY1, inchideX2, inchideY2);
+    bool running = true;
+    while (running) {
+        if (ismouseclick(WM_LBUTTONDOWN)) {
+            int x, y;
+            getmouseclick(WM_LBUTTONDOWN, x, y);
+    if (isInsideButton(x, y, incepeX1, incepeY1, incepeX2, incepeY2))
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+        incepejoc(7);
+        break;
+      }
+
+    else
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+       bool multiplayer=true;
+       incepejoc(77);
+       break;
+      }
+    }
+    }
 }
 
 void button8Action() {
     PlaySound("buton.wav", NULL, SND_ASYNC);
     cleardevice();
-    int i=8;
-    incepejoc(i);
+    showMultiplayerGameMenu(incepeX1, incepeY1, incepeX2, incepeY2, inchideX1, inchideY1, inchideX2, inchideY2);
+    bool running = true;
+    while (running) {
+        if (ismouseclick(WM_LBUTTONDOWN)) {
+            int x, y;
+            getmouseclick(WM_LBUTTONDOWN, x, y);
+    if (isInsideButton(x, y, incepeX1, incepeY1, incepeX2, incepeY2))
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+        incepejoc(8);
+        break;
+      }
+
+    else
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+       bool multiplayer=true;
+       incepejoc(88);
+       break;
+      }
+    }
+    }
 }
 
 void button9Action() {
     PlaySound("buton.wav", NULL, SND_ASYNC);
     cleardevice();
-    int i=9;
-    incepejoc(i);
+    showMultiplayerGameMenu(incepeX1, incepeY1, incepeX2, incepeY2, inchideX1, inchideY1, inchideX2, inchideY2);
+    bool running = true;
+    while (running) {
+        if (ismouseclick(WM_LBUTTONDOWN)) {
+            int x, y;
+            getmouseclick(WM_LBUTTONDOWN, x, y);
+    if (isInsideButton(x, y, incepeX1, incepeY1, incepeX2, incepeY2))
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+        incepejoc(9);
+        break;
+      }
+
+    else
+      {
+        PlaySound("buton.wav", NULL, SND_ASYNC);
+        cleardevice();
+        DWORD volume = 0x40004000;
+        SetVolume(0x40004000);
+       bool multiplayer=true;
+       incepejoc(99);
+       break;
+      }
+    }
+    }
 }
 
 void showLevelMenu() {
@@ -587,7 +865,7 @@ void incarcaHarta()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
-            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true;}
             if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
@@ -614,7 +892,7 @@ void incarcaHarta1()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
-            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true;}
             if (car == 'L') { iluigi = i; jluigi = j; car = '.'; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
@@ -627,6 +905,7 @@ void incarcaHarta1()
 
 void incarcaHarta2()
 {
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
     ifstream fisier("harta2.txt");
     fisier >> nrLinii >> nrColoane;
     //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
@@ -640,7 +919,7 @@ void incarcaHarta2()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
-            if (car == 'E') { ienemy = i; jenemy = j; car = '.';}
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true;}
             if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
@@ -648,11 +927,13 @@ void incarcaHarta2()
     }
     fisier.close();
     scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
 }
 
 
 void incarcaHarta3()
 {
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
     ifstream fisier("harta3.txt");
     fisier >> nrLinii >> nrColoane;
     //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
@@ -666,7 +947,7 @@ void incarcaHarta3()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
-            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true;}
             if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
@@ -674,11 +955,13 @@ void incarcaHarta3()
     }
     fisier.close();
     scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
 }
 
 
 void incarcaHarta4()
 {
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
     ifstream fisier("harta4.txt");
     fisier >> nrLinii >> nrColoane;
     //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
@@ -692,7 +975,7 @@ void incarcaHarta4()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
-            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true;}
             if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
@@ -700,11 +983,13 @@ void incarcaHarta4()
     }
     fisier.close();
     scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
 }
 
 
 void incarcaHarta5()
 {
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
     ifstream fisier("harta5.txt");
     fisier >> nrLinii >> nrColoane;
     //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
@@ -718,7 +1003,7 @@ void incarcaHarta5()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
-            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true;}
             if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
@@ -726,11 +1011,13 @@ void incarcaHarta5()
     }
     fisier.close();
     scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
 }
 
 
 void incarcaHarta6()
 {
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
     ifstream fisier("harta6.txt");
     fisier >> nrLinii >> nrColoane;
     //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
@@ -744,7 +1031,7 @@ void incarcaHarta6()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
-            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true;}
             if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
@@ -752,11 +1039,13 @@ void incarcaHarta6()
     }
     fisier.close();
     scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
 }
 
 
 void incarcaHarta7()
 {
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
     ifstream fisier("harta7.txt");
     fisier >> nrLinii >> nrColoane;
     //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
@@ -770,7 +1059,7 @@ void incarcaHarta7()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
-            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true;}
             if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
@@ -778,11 +1067,13 @@ void incarcaHarta7()
     }
     fisier.close();
     scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
 }
 
 
 void incarcaHarta8()
 {
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
     ifstream fisier("harta8.txt");
     fisier >> nrLinii >> nrColoane;
     //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
@@ -796,7 +1087,7 @@ void incarcaHarta8()
             if (car == '*')
                 nrstelute++;
             if (car == 'M') { imario = i; jmario = j; car = '.'; }
-            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true;}
             if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
             harta[i][j] = car;
             afiseazaPoza(harta[i][j], i, j);
@@ -804,11 +1095,13 @@ void incarcaHarta8()
     }
     fisier.close();
     scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
 }
 
 
 void incarcaHarta9()
 {
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
     ifstream fisier("harta9.txt");
     fisier >> nrLinii >> nrColoane;
     //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
@@ -830,6 +1123,250 @@ void incarcaHarta9()
     }
     fisier.close();
     scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
+}
+
+void incarcaHarta11()
+{
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
+    ifstream fisier("harta11.txt");
+    fisier >> nrLinii >> nrColoane;
+    //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
+    setbkcolor(WHITE); cleardevice();
+    nrstelute = 0;
+    for (i = 0; i < nrLinii; i++)
+    {
+        for (j = 0; j < nrColoane; j++)
+        {
+            fisier >> car;
+            if (car == '*')
+                nrstelute++;
+            if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
+            harta[i][j] = car;
+            afiseazaPoza(harta[i][j], i, j);
+        }
+    }
+    fisier.close();
+    scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
+}
+
+void incarcaHarta22()
+{
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
+    ifstream fisier("harta22.txt");
+    fisier >> nrLinii >> nrColoane;
+    //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
+    setbkcolor(WHITE); cleardevice();
+    nrstelute = 0;
+    for (i = 0; i < nrLinii; i++)
+    {
+        for (j = 0; j < nrColoane; j++)
+        {
+            fisier >> car;
+            if (car == '*')
+                nrstelute++;
+            if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
+            harta[i][j] = car;
+            afiseazaPoza(harta[i][j], i, j);
+        }
+    }
+    fisier.close();
+    scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
+}
+
+void incarcaHarta33()
+{
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
+    ifstream fisier("harta33.txt");
+    fisier >> nrLinii >> nrColoane;
+    //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
+    setbkcolor(WHITE); cleardevice();
+    nrstelute = 0;
+    for (i = 0; i < nrLinii; i++)
+    {
+        for (j = 0; j < nrColoane; j++)
+        {
+            fisier >> car;
+            if (car == '*')
+                nrstelute++;
+            if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
+            harta[i][j] = car;
+            afiseazaPoza(harta[i][j], i, j);
+        }
+    }
+    fisier.close();
+    scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
+}
+
+void incarcaHarta44()
+{
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
+    ifstream fisier("harta44.txt");
+    fisier >> nrLinii >> nrColoane;
+    //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
+    setbkcolor(WHITE); cleardevice();
+    nrstelute = 0;
+    for (i = 0; i < nrLinii; i++)
+    {
+        for (j = 0; j < nrColoane; j++)
+        {
+            fisier >> car;
+            if (car == '*')
+                nrstelute++;
+            if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
+            harta[i][j] = car;
+            afiseazaPoza(harta[i][j], i, j);
+        }
+    }
+    fisier.close();
+    scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
+}
+
+void incarcaHarta55()
+{
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
+    ifstream fisier("harta55.txt");
+    fisier >> nrLinii >> nrColoane;
+    //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
+    setbkcolor(WHITE); cleardevice();
+    nrstelute = 0;
+    for (i = 0; i < nrLinii; i++)
+    {
+        for (j = 0; j < nrColoane; j++)
+        {
+            fisier >> car;
+            if (car == '*')
+                nrstelute++;
+            if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
+            harta[i][j] = car;
+            afiseazaPoza(harta[i][j], i, j);
+        }
+    }
+    fisier.close();
+    scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
+}
+
+void incarcaHarta66()
+{
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
+    ifstream fisier("harta66.txt");
+    fisier >> nrLinii >> nrColoane;
+    //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
+    setbkcolor(WHITE); cleardevice();
+    nrstelute = 0;
+    for (i = 0; i < nrLinii; i++)
+    {
+        for (j = 0; j < nrColoane; j++)
+        {
+            fisier >> car;
+            if (car == '*')
+                nrstelute++;
+            if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
+            harta[i][j] = car;
+            afiseazaPoza(harta[i][j], i, j);
+        }
+    }
+    fisier.close();
+    scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
+}
+
+void incarcaHarta77()
+{
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
+    ifstream fisier("harta77.txt");
+    fisier >> nrLinii >> nrColoane;
+    //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
+    setbkcolor(WHITE); cleardevice();
+    nrstelute = 0;
+    for (i = 0; i < nrLinii; i++)
+    {
+        for (j = 0; j < nrColoane; j++)
+        {
+            fisier >> car;
+            if (car == '*')
+                nrstelute++;
+            if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
+            harta[i][j] = car;
+            afiseazaPoza(harta[i][j], i, j);
+        }
+    }
+    fisier.close();
+    scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
+}
+
+void incarcaHarta88()
+{
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
+    ifstream fisier("harta88.txt");
+    fisier >> nrLinii >> nrColoane;
+    //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
+    setbkcolor(WHITE); cleardevice();
+    nrstelute = 0;
+    for (i = 0; i < nrLinii; i++)
+    {
+        for (j = 0; j < nrColoane; j++)
+        {
+            fisier >> car;
+            if (car == '*')
+                nrstelute++;
+            if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
+            harta[i][j] = car;
+            afiseazaPoza(harta[i][j], i, j);
+        }
+    }
+    fisier.close();
+    scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
+}
+
+void incarcaHarta99()
+{
+    MessageBoxW(NULL, L"Urmeaza procesul de incarcare al hartii. Va rugam asteptati...", L"Incarcare", MB_OK | MB_ICONINFORMATION);
+    ifstream fisier("harta99.txt");
+    fisier >> nrLinii >> nrColoane;
+    //initwindow(latime * nrColoane * 100, latime * nrLinii, "Mario pe scari");
+    setbkcolor(WHITE); cleardevice();
+    nrstelute = 0;
+    for (i = 0; i < nrLinii; i++)
+    {
+        for (j = 0; j < nrColoane; j++)
+        {
+            fisier >> car;
+            if (car == '*')
+                nrstelute++;
+            if (car == 'M') { imario = i; jmario = j; car = '.'; }
+            if (car == 'E') { ienemy = i; jenemy = j; car = '.'; existaInamic=true; }
+            if (car == 'L') { iluigi = i; jluigi = j; car = '.'; multiplayer=true; }
+            harta[i][j] = car;
+            afiseazaPoza(harta[i][j], i, j);
+        }
+    }
+    fisier.close();
+    scor = 0;
+    MessageBoxW(NULL, L"Harta s-a incarcat cu succes! Distractie placuta!", L"Incarcare finalizata", MB_OK | MB_ICONINFORMATION);
 }
 
 void checkCollisionWithEnemy()
@@ -838,7 +1375,10 @@ void checkCollisionWithEnemy()
     if (imario == ienemy && jmario == jenemy)
     {
         if (!isInvincible)
+        {
             lives--;
+            PlaySound("damage.wav", NULL, SND_ASYNC);
+        }
          afiseazaScor();
     }
 }
@@ -869,7 +1409,11 @@ void updateInamic()
     checkCollisionWithLuigi();
 
     if (lives <= 0)
+    {
+        PlaySound("Lostgame.wav", NULL, SND_ASYNC);
         isGameOver = true;
+    }
+
 
     // afiseazaInamic - pozitia urmatoarea a inamicului
     afiseazaInamic(ienemy, jenemy);
@@ -890,12 +1434,14 @@ bool canJumpLuigi() {
 void jump() {
     if (canJump() && !inJump) {
         inJump = true;
+        PlaySound("saritura.wav", NULL, SND_ASYNC);
         jumpHeight = 0;
     }
 }
 void jumpLuigi() {
     if (canJumpLuigi() && !inJumpLuigi) {
         inJumpLuigi = true;
+        PlaySound("saritura.wav", NULL, SND_ASYNC);
         jumpHeight = 0;
     }
 }
@@ -933,6 +1479,33 @@ void incepejoc(int i)
         break;
     case 9:
         incarcaHarta9();
+        break;
+    case 11:
+        incarcaHarta11();
+        break;
+    case 22:
+        incarcaHarta22();
+        break;
+    case 33:
+        incarcaHarta33();
+        break;
+    case 44:
+        incarcaHarta44();
+        break;
+    case 55:
+        incarcaHarta55();
+        break;
+    case 66:
+        incarcaHarta66();
+        break;
+    case 77:
+        incarcaHarta77();
+        break;
+    case 88:
+        incarcaHarta88();
+        break;
+    case 99:
+        incarcaHarta99();
         break;
         }
         ipostaza = 1;
@@ -982,7 +1555,58 @@ void incepejoc(int i)
                 }
             delay(100);
             if(isGameOver==true)
-                break;//    de adaugat meniu atunci cand pierzi
+                {
+        showEndGameMenu(incepeX1, incepeY1, incepeX2, incepeY2, inchideX1, inchideY1, inchideX2, inchideY2);
+        bool running=true;
+        while (running) {
+        if (ismouseclick(WM_LBUTTONDOWN)) {
+            int x, y;
+            getmouseclick(WM_LBUTTONDOWN, x, y);
+
+            if (isInsideButton(x, y, incepeX1, incepeY1, incepeX2, incepeY2))
+                {
+                PlaySound("buton.wav", NULL, SND_ASYNC);
+                scor=0;
+                showMenu(incepeX1, incepeY1, incepeX2, incepeY2, nivelX1, nivelY1, nivelX2, nivelY2, inchideX1, inchideY1, inchideX2, inchideY2);
+        bool running = true;
+        while (running) {
+        if (ismouseclick(WM_LBUTTONDOWN)) {
+            int x, y;
+            getmouseclick(WM_LBUTTONDOWN, x, y);
+
+            if (isInsideButton(x, y, incepeX1, incepeY1, incepeX2, incepeY2)) {
+                PlaySound("buton.wav", NULL, SND_ASYNC);
+                cleardevice();
+                DWORD volume = 0x40004000;
+                SetVolume(0x40004000);
+                incepejoc(1);
+                closegraph();
+                gameLog.close();
+                break;
+            }
+            else if (isInsideButton(x, y, nivelX1, nivelY1, nivelX2, nivelY2)) {
+                PlaySound("buton.wav", NULL, SND_ASYNC);
+                showLevelMenu();
+                break;
+            }
+            else if (isInsideButton(x, y, inchideX1, inchideY1, inchideX2, inchideY2)) {
+                PlaySound("buton.wav", NULL, SND_ASYNC);
+                running = false;
+                Exit_Transition();
+                break;
+            }
+        }
+    }
+            }
+            else if (isInsideButton(x, y, inchideX1, inchideY1, inchideX2, inchideY2)) {
+                PlaySound("buton.wav", NULL, SND_ASYNC);
+                running = false;
+                Exit_Transition();
+                break;
+            }
+        }
+    }
+  }
         } while (tasta != ESC);
      }
 }
@@ -1000,7 +1624,7 @@ void afiseazaScor()
         if (i <= lives)
         {
             readimagefile("cer.jpg", 30 * (i - 1), 60, 30 * i, 90);
-            readimagefile("heart.gif", 30 * (i - 1), 60, 30 * i, 90);
+            readimagefile("inima.jpg", 30 * (i - 1), 60, 30 * i, 90);
         }
         else
             readimagefile("cer.jpg", 30 * (i - 1), 60, 30 * i, 90);
